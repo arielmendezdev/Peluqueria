@@ -17,20 +17,24 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         unique: true,
       },
-      name: {
+      nameComplete: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      owner: {
+      phone: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      email: {
         allowNull: false,
         type: DataTypes.STRING,
       },
       social_razon: {
+        allowNull: false,
         type: DataTypes.STRING,
       },
-      isDeleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      image : {
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,

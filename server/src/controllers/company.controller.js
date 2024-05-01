@@ -13,6 +13,25 @@ class CompanyController extends BaseController {
       const response = await this.db[this.entity].findByPk(id, 
         { 
           include: [
+            { model: Local, as: "locals"
+              
+            },
+          ]
+        }
+      );
+      res.send(response);
+    } catch (error) {
+      res.send(error);
+    }
+  }
+  
+  async getByEmail(req, res) {
+    const { email } = req.params;
+    try {
+      const response = await this.db[this.entity].findOne(
+        { where: { email: email } }, 
+        { 
+          include: [
             { model: Local, as: "locals", 
               include: { model: Address, as: "address" }
             },
@@ -24,7 +43,7 @@ class CompanyController extends BaseController {
       res.send(error);
     }
   }
-
+  
   async getAll(req, res) {
     try {
       const response = await this.db[this.entity].findAll({

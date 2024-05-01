@@ -10,20 +10,24 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         unique: true
       },
-      name: {
+      nameComplete: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      owner: {
+      phone: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      email: {
         allowNull: false,
         type: Sequelize.STRING
       },
       social_razon: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      isDeleted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      image: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

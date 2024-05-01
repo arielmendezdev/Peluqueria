@@ -10,14 +10,19 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Button,
-  Avatar
 } from "@nextui-org/react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import img from "../assets/images/Ariel.png";
+import { useContext, useState } from "react";
+import Link from "./specials/Link";
+import img from "../assets/images/user.jpg";
+import logo from "../assets/images/tijera_peine.png";
+import '../assets/css/Navbar.css'
+import { Link as LinkDom} from 'react-router-dom'
+import { useAppContext } from "../contexts/Principal";
 
 export default function NavbarComp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { logout } = useAppContext()
 
   const handleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,7 +36,7 @@ export default function NavbarComp() {
       maxWidth="full"
     >
       <NavbarContent className="sm:flex text-white">
-        MY PELUQUERIA
+        <img src={logo} alt="" width={100} />
       </NavbarContent>
 
       <NavbarContent className="sm:hidden" justify="end">
@@ -43,7 +48,7 @@ export default function NavbarComp() {
         justify="center"
       >
         <NavbarItem className="hover:text-red-200">
-          <Link to="/">Home</Link>
+          <Link to="/sucursales">Sucursales</Link>
         </NavbarItem>
         <NavbarItem className="hover:text-red-200">
           <Link to="/panel">Panel</Link>
@@ -53,20 +58,20 @@ export default function NavbarComp() {
       <NavbarContent className="hidden sm:flex" justify="end">
         <Dropdown>
           <DropdownTrigger>
-            <Button isIconOnly variant="light">
-              <Avatar src={img} />
+            <Button isIconOnly variant="light" className="">
+              <img src={img} alt="" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu aria-label="Dynamic Actions">
             <DropdownItem textValue="Perfil">
               <Link to="/perfil" className="block">
-                Perfil
+                <h1>Perfil</h1>
               </Link>
             </DropdownItem>
             <DropdownItem textValue="Login">
-              <Link to="/login" className="block">
-                Cerrar Sesión
-              </Link>
+              <LinkDom to="/login" className="block" onClick={logout}>
+                <h1>Salir</h1>
+              </LinkDom>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -74,8 +79,8 @@ export default function NavbarComp() {
 
       <NavbarMenu className="opacity-70 bg-black text-white">
         <NavbarMenuItem className="hover:text-red-400">
-          <Link className="block" to="/">
-            Home
+          <Link className="block" to="/sucursales">
+            Sucursales
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="hover:text-red-400">
@@ -89,9 +94,9 @@ export default function NavbarComp() {
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="hover:text-red-400">
-          <Link className="block" to="/login">
+          <LinkDom to="/login" className="block" onClick={logout}>
             Salir
-          </Link>
+          </LinkDom>
         </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>

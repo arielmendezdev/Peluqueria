@@ -1,38 +1,79 @@
 import { NextUIProvider } from "@nextui-org/react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './assets/css/App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavbarComp from "./components/NavbarComp";
-import HomePage from "./pages/HomePage";
+import SucursalPage from "./pages/SucursalPage";
 import PanelPage from "./pages/PanelPage";
-import SucursalesPage from "./pages/SucursalesPage";
 import PerfilPage from "./pages/PerfilPage";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./components/LoginPage";
 import FooterComp from "./components/FooterComp";
 import HeaderComp from "./components/HeaderComp";
+import RegisterPage from "./components/RegisterPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PageNotFound from "./pages/PageNotFound";
+import { useAppContext } from "./contexts/Principal.jsx";
+import "./assets/css/App.css";
 
 function App() {
-  
+
+  const { user, background } = useAppContext();
+
   return (
-    <NextUIProvider>
-      <BrowserRouter>
-        <NavbarComp />
-        <HeaderComp />
+    
+      <NextUIProvider>
+        <BrowserRouter>
+          {user && (
+            <>
+              <NavbarComp />
+              <HeaderComp />
+            </>
+          )}
 
-        <div className="mt-4 mx-5 sm:ml-32 sm:mr-32">
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/perfil" element={<PerfilPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/panel" element={<PanelPage />} />
-            <Route path="/sucursales" element={<SucursalesPage />} />
-          </Routes>
-        </div>
+          <div className={background ? "" : "background"}>
+            <div className="mx-5 sm:ml-32 sm:mr-32">
+              <Routes>
+                <Route
+                  index
+                  element={user ? <SucursalPage /> : <LoginPage />}
+                />
+                <Route
+                  path="/login"
+                  element={user ? <SucursalPage /> : <LoginPage />}
+                />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route
+                  element={
+                    user ? (
+                      <ProtectedRoute isAuthenticate={user} />
+                    ) : (
+                      <PageNotFound />
+                    )
+                  }
+                >
+                  <Route path="/sucursales" element={<SucursalPage />} />
+                  <Route path="/perfil" element={<PerfilPage />} />
+                </Route>
+                <Route
+                  path="/panel"
+                  element={
+                    user ? (
+                      <ProtectedRoute isAuthenticate={user} redirectTo>
+                        <PanelPage />
+                      </ProtectedRoute>
+                    ) : (
+                      <PageNotFound />
+                    )
+                  }
+                />
+                <Route path="*" element={<PageNotFound />} />
+              </Routes>
+            </div>
+          </div>
 
-        <FooterComp />
-          
-      </BrowserRouter>
-    </NextUIProvider>
-  )
+          {user && <FooterComp />}
+        </BrowserRouter>
+      </NextUIProvider>
+    
+  );
 }
 
-export default App
+export default App;

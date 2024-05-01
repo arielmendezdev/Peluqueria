@@ -1,25 +1,22 @@
-import { Image } from '@nextui-org/react'
-import { useContext } from "react"
-import { appContext } from "../contexts/appContext"
 import '../assets/css/Header.css'
-import img from '../assets/images/Ariel.png'
+import { useAppContext } from "../contexts/Principal"
 
 export default function HeaderComp() {
 
-  const { company } = useContext(appContext)
+  const { company } = useAppContext()
 
   return (
     <>
-    <div className="header pb-10">
-        { company && 
-        <>
-            <div className='w-28 h-28 rounded-full mt-10'>
-              <Image src={img} />
-            </div>
-            <h1 className="text-white w-48 bg-black bg-opacity-35 text-center text-xl">Hola, {company.owner}</h1>
-        </>
-        }
-    </div>
+      <div className="header">
+        {company && (
+          <>
+            <h3 className="text-white w-48 text-center text-xl">Hola</h3>
+            <h1 className="text-white w-48 text-center text-2xl">
+              <b>{company.nameComplete}</b>
+            </h1>
+          </>
+        )}
+      </div>
     </>
-  )
+  );
 }

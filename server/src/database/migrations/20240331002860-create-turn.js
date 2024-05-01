@@ -26,27 +26,29 @@ module.exports = {
           model: "Locals",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       employee_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'Employees',
-          key: 'id'
-        }
+          model: "Employees",
+          key: "id",
+        },
       },
       client_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'Clients',
-          key: 'id'
-        }
+          model: "Clients",
+          key: "id",
+        },
       },
       acomp_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'Acomps',
-          key: 'id'
-        }
+          model: "Acomps",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

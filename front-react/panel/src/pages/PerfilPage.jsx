@@ -1,5 +1,7 @@
 export default function PerfilPage() {
   return (
-    <div>Perfil Page</div>
-  )
+    <div className="flex justify-center mt-96 h-full text-5xl">
+      Perfil Page
+    </div>
+  );
 }

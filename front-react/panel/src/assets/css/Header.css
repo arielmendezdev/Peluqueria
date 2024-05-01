@@ -1,7 +1,7 @@
 .header {
     display: flex;
-    
-    background-image: url(../images/fondo.jpg);
+    height: 150px;
+    background-image: url(../images/fondo22.jpg);
     justify-content: center;
     background-size: cover;
     flex-direction: column;
