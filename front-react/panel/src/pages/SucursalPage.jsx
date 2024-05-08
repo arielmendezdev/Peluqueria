@@ -19,14 +19,12 @@ export default function SucursalPage() {
   const [showLocal, setShowLocal] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const {
-    locals,
     emailCompany,
     company,
     setBackground,
     createLocal,
     createAddress,
     fetchCompanyEmail,
-    fetchLocals,
     deleteLocal,
   } = useAppContext();
 
@@ -48,7 +46,6 @@ export default function SucursalPage() {
       data.local_id = idLocal
       await createAddress(data)
       setShowAddress(false);
-      fetchLocals(company.id);
       resetLocal();
       resetAddress();
     }
@@ -70,7 +67,7 @@ export default function SucursalPage() {
   useEffect(() => {
     setBackground(true);
     fetchCompanyEmail(emailCompany)
-  }, [locals]);
+  }, []);
 
   const close = () => {
     setShowAddress(false);
@@ -191,10 +188,10 @@ export default function SucursalPage() {
       </Modal>
 
       <div className="mt-10 flex justify-center flex-wrap">
-        {locals &&
-          locals.map((local) => {
+        {company &&
+          company.locals.map((local) => {
             return (
-              <Card key={local.id} className="w-72">
+              <Card key={local.id} className="w-72 flex m-2">
                 <CardHeader className="flex justify-between">
                   <h1>{local.name.toUpperCase()}</h1>
                   <Button isIconOnly color="danger" size="sm" variant="light" onClick={() => deleteLocal(local.id)}>

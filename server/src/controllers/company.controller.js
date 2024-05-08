@@ -1,6 +1,6 @@
 const BaseController = require('./base.controller')
 
-const { Local, Address } = require('../models')
+const { Local, Address, Employee } = require('../models')
 
 class CompanyController extends BaseController {
   constructor({ db }) {
@@ -13,8 +13,13 @@ class CompanyController extends BaseController {
       const response = await this.db[this.entity].findByPk(id, 
         { 
           include: [
-            { model: Local, as: "locals"
-              
+            { model: Local, as: "locals", 
+              include: [
+                { model: Address, as: "address" },
+                { model: Employee, as: "employees", 
+                  include: { model: Address, as: "address"}
+                }
+              ]
             },
           ]
         }
@@ -29,13 +34,19 @@ class CompanyController extends BaseController {
     const { email } = req.params;
     try {
       const response = await this.db[this.entity].findOne(
-        { where: { email: email } }, 
-        { 
+        { where: { email: email } },
+        {
           include: [
-            { model: Local, as: "locals", 
-              include: { model: Address, as: "address" }
+            {
+              model: Local, as: "locals",
+              include: [
+                { model: Address, as: "address" },
+                { model: Employee, as: "employees",
+                    include: { model: Address, as: "address" },
+                },
+              ],
             },
-          ]
+          ],
         }
       );
       res.send(response);

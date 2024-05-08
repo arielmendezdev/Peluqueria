@@ -37,26 +37,6 @@ class LocalController extends BaseController {
     }
   }
 
-  async getLocalsByCompany(req, res) {
-
-    const { companyId } = req.params
-
-    try {
-      const response = await this.db[this.entity].findByPk({
-        where: {
-          company_id: companyId,
-        },
-        include: [
-          { model: Address, as: "address" },
-          { model: Employee, as: "employees" },
-          { model: Turn, as: "turns" },
-        ],
-      });
-      res.send(response);
-    } catch (error) {
-      res.send(error);
-    }
-  }
 }
 
 module.exports = LocalController;

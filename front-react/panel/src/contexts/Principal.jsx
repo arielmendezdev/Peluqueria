@@ -18,7 +18,8 @@ export function useAppContext() {
 
 export default function StatePrincipalContext({ children }) {
   const [company, setCompany] = useState();
-  const [locals, setLocals] = useState();
+  const [idCompany, setIdCompany] = useState();
+  // const [locals, setLocals] = useState();
   const [background, setBackground] = useState(false)
   const [user, setUser] = useState(null);
   const [emailCompany, setEmailCompany] = useState(localStorage.setItem("user", JSON.stringify(user)));
@@ -27,19 +28,20 @@ export default function StatePrincipalContext({ children }) {
   const fetchCompanyEmail = async (email) => {
     try {
         const response = await axios.get(`http://127.0.0.1:3000/api/company/email/${email}`);
-        setCompany(response.data)
-        console.log(response.data)
-        
+        setIdCompany(response.data.id)
+        await fetchCompanyById(response.data.id)
     } catch (error) {
         console.log("No company found");
     }
   };
 
-  const fetchLocals = async (companyId) => {
-    const response = await axios.get(
-      `http://127.0.0.1:3000/api/local/company/${companyId}`
-    );
-    setLocals(response.data.locals);
+  const fetchCompanyById = async (companyId) => {
+    try {
+        const response = await axios.get(`http://127.0.0.1:3000/api/company/${companyId}`);
+        setCompany(response.data)
+    } catch (error) {
+        console.log("No company found");
+    }
   };
 
   const createCompany = async (data) => {
@@ -67,6 +69,7 @@ export default function StatePrincipalContext({ children }) {
     } catch (error) {
       console.log(error)
     }
+    fetchCompanyById(idCompany);
   }
 
   const deleteLocal = async (localId) => {
@@ -75,17 +78,17 @@ export default function StatePrincipalContext({ children }) {
     } catch (error) {
       console.log(error);
     }
-    fetchLocals(company.id);
+    fetchCompanyById(idCompany);
   };
 
-  const saveInfo = async (infoLocal, infoAddress) => {
-    const response = await axios.post("http://127.0.0.1:3000/api/local", infoLocal);
-    if (response) {
-      infoAddress.local_id = response.data.id;
-      await axios.post("http://127.0.0.1:3000/api/address", infoAddress);
-    }
-    fetchLocals(company.id);
-  };
+  // const saveInfo = async (infoLocal, infoAddress) => {
+  //   const response = await axios.post("http://127.0.0.1:3000/api/local", infoLocal);
+  //   if (response) {
+  //     infoAddress.local_id = response.data.id;
+  //     await axios.post("http://127.0.0.1:3000/api/address", infoAddress);
+  //   }
+  //   fetchCompanyById(idCompany)
+  // };
 
   onAuthStateChanged(auth, (userFirebase) => {
     if (userFirebase) {
@@ -99,21 +102,15 @@ export default function StatePrincipalContext({ children }) {
   const logout = async () => {
     await signOut(auth)
     setBackground(false)
-    setStorage(localStorage.removeItem('user'))
+    setEmailCompany(localStorage.removeItem("user"));
   }
-  
-  useEffect(()=> {
-    fetchLocals();
-  }, [])
 
   return (
     <>
       <AppContext.Provider
         value={{
           company,
-          locals,
-          saveInfo,
-          fetchLocals,
+          // saveInfo,
           deleteLocal,
           user,
           signInWithEmailAndPassword,
