@@ -51,7 +51,7 @@ export default function NavbarComp() {
           <Link to="/sucursales">Sucursales</Link>
         </NavbarItem>
         <NavbarItem className="hover:text-red-200">
-          <Link to="/panel">Panel</Link>
+          <Link to="/employee">Empleados</Link>
         </NavbarItem>
       </NavbarContent>
 
@@ -84,8 +84,8 @@ export default function NavbarComp() {
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="hover:text-red-400">
-          <Link className="block" to="/panel">
-            Panel
+          <Link className="block" to="/employee">
+            Empleados
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="hover:text-red-400">

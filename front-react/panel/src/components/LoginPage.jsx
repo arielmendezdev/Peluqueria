@@ -60,7 +60,6 @@ export default function LoginPage() {
           <CardBody>
             <form className="flex flex-col gap-6" onSubmit={login}>
               <Input
-                // onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 defaultValue=""
                 className="text-white"
@@ -85,7 +84,6 @@ export default function LoginPage() {
               />
               {errors.email && <span>{errors.email.message}</span>}
               <Input
-                // onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 defaultValue=""
                 className="text-white"

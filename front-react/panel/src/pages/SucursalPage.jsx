@@ -14,10 +14,9 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../contexts/Principal";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function SucursalPage() {
-  const [showLocal, setShowLocal] = useState(false);
-  const [showAddress, setShowAddress] = useState(false);
   const {
     emailCompany,
     company,
@@ -27,7 +26,9 @@ export default function SucursalPage() {
     fetchCompanyEmail,
     deleteLocal,
   } = useAppContext();
-
+  
+  const [showLocal, setShowLocal] = useState(false);
+  const [showAddress, setShowAddress] = useState(false);
   const [idLocal, setIdLocal] = useState()
 
   const openModalLocal = () => setShowLocal(true);
@@ -76,9 +77,7 @@ export default function SucursalPage() {
 
   return (
     <>
-      <h1 className="flex justify-center">SUCURSALES</h1>
-
-      <Button onPress={openModalLocal}>Agregar Sucursal</Button>
+      <Button onPress={openModalLocal} className="flex mx-auto">Agregar Sucursal</Button>
 
       <Modal isOpen={showLocal} onClose={close}>
         <ModalContent>
@@ -196,6 +195,9 @@ export default function SucursalPage() {
                   <h1>{local.name.toUpperCase()}</h1>
                   <Button isIconOnly color="danger" size="sm" variant="light" onClick={() => deleteLocal(local.id)}>
                     <DeleteIcon />
+                  </Button>
+                  <Button isIconOnly color="danger" size="sm" variant="light" onClick={() => deleteLocal(local.id)}>
+                    <EditIcon />
                   </Button>
                 </CardHeader>
                 <CardBody>
