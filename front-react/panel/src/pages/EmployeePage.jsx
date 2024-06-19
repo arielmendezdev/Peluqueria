@@ -1,54 +1,70 @@
 import { useState, useEffect } from "react";
 import {
-  Select,
-  SelectItem,
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
   Table,
   TableBody,
   TableCell,
-  TableColumn,
-  TableHeader,
+  TableHead,
   TableRow,
-  Input,
-} from "@nextui-org/react";
+  Button,
+  TextField,
+  Modal,
+  Select,
+  MenuItem,
+  Typography,
+  Box,
+  Card,
+} from "@mui/material";
 import { useAppContext } from "../contexts/Principal";
 import { useForm } from "react-hook-form";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function EmployeePage() {
-  const { company, emailCompany, fetchCompanyEmail, createEmployee } = useAppContext();
+  const {
+    company,
+    emailCompany,
+    fetchCompanyEmail,
+    createEmployee,
+    fetchEmployees,
+    employees,
+    deleteEmployee,
+  } = useAppContext();
 
   const columns = [
     {
       key: "name",
-      label: "Nombre"
+      label: "Nombre",
     },
     {
-      key: "phone",
-      label: "Teléfono"
+      key: "lastname",
+      label: "Apellido",
     },
     {
-      key: "address",
-      label: "Dirección"
+      key: "email",
+      label: "Email",
     },
     {
-      key: "employees",
-      label: "Empleados"
+      key: "local",
+      label: "Local",
     },
-  ]
+    {
+      key: "actions",
+      label: "Acciones",
+    },
+  ];
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm();
 
   useEffect(() => {
-    fetchCompanyEmail(emailCompany);
+    const getInfo = async () => {
+      await fetchCompanyEmail(emailCompany);
+      await fetchEmployees();
+    };
+    getInfo();
   }, []);
 
   const close = () => {
@@ -57,116 +73,139 @@ export default function EmployeePage() {
 
   const openModalEmployee = () => {
     setShowEmployee(true);
-  }
+  };
 
-  const saveEmployee = async (data) => {
-    await createEmployee(data)
-    close()
-  }
+  const saveEmployee = handleSubmit(async (data) => {
+    await createEmployee(data);
+    close();
+  });
 
-  const [showEmployee, setShowEmployee] = useState(false)
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const [showEmployee, setShowEmployee] = useState(false);
 
   return (
     <>
-      <Button onClick={openModalEmployee} className="flex mx-auto mb-4">Agregar Empleado</Button>
+      <Button onClick={openModalEmployee} className="flex mx-auto mb-4">
+        Agregar Empleado
+      </Button>
 
-      <Modal isOpen={showEmployee} onClose={close}>
-        <ModalContent>
-          <ModalHeader>Agregar Empleado</ModalHeader>
-          <ModalBody>
-            <form
-              onSubmit={handleSubmit(saveEmployee)}
-              className="flex flex-col gap-4"
+      <Modal open={showEmployee}>
+        <Card sx={style}>
+          <Box className="mb-4 flex justify-center">
+            <Typography>Cargar Empleado</Typography>
+          </Box>
+
+          <form
+            onSubmit={handleSubmit(saveEmployee)}
+            className="flex flex-col gap-4"
+          >
+            <Select
+              label="Seleccione la sucursal *"
+              size="small"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              {...register("local_id", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
             >
-              <Select
-                label="Seleccione la sucursal"
-                {...register("local_id", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-              >
-                {company &&
-                  company.locals.map((local) => (
-                    <SelectItem key={local.id} value={local.id}>
-                      {local.name}
-                    </SelectItem>
-                  ))}
-              </Select>
-              <Input
-                size="sm"
-                defaultValue=""
-                {...register("name", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Nombre"
-              ></Input>
-              {errors.name && <span>{errors.name.message}</span>}
-              <Input
-                size="sm"
-                defaultValue=""
-                {...register("lastname", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Apellido"
-              ></Input>
-              {errors.lastname && <span>{errors.lastname.message}</span>}
-              <Input
-                size="sm"
-                defaultValue=""
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Email"
-              ></Input>
-              {errors.lastname && <span>{errors.lastname.message}</span>}
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="light"
-                  className="w-20"
-                >
-                  Guardar
-                </Button>
-              </div>
-            </form>
-          </ModalBody>
-        </ModalContent>
+              {company &&
+                company.locals.map((local) => (
+                  <MenuItem key={local.id} value={local.id}>
+                    {local.name}
+                  </MenuItem>
+                ))}
+            </Select>
+            <TextField
+              label="Nombre"
+              size="small"
+              fullWidth
+              variant="outlined"
+              helperText={errors.name?.message}
+              error={!!errors.name}
+              {...register("name", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            {errors.name && <span>{errors.name.message}</span>}
+            <TextField
+              label="Apellido"
+              size="small"
+              fullWidth
+              variant="outlined"
+              helperText={errors.lastname?.message}
+              error={!!errors.lastname}
+              {...register("lastname", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            {errors.lastname && <span>{errors.lastname.message}</span>}
+            <TextField
+              label="Email"
+              size="small"
+              fullWidth
+              variant="outlined"
+              helperText={errors.email?.message}
+              error={!!errors.email}
+              {...register("email", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            {errors.lastname && <span>{errors.lastname.message}</span>}
+            <div className="flex justify-end gap-4">
+              <Button color="error" variant="outlined" onClick={close}>
+                Cerrar
+              </Button>
+              <Button type="submit" variant="text" onClick={saveEmployee}>
+                Guardar
+              </Button>
+            </div>
+          </form>
+        </Card>
       </Modal>
 
-      {company && (
+      {employees && (
         <div>
-          <Table aria-label="Tabla de Locales">
-            <TableHeader columns={columns}>
-              {(column) => (
-                <TableColumn key={column.uid}>{column.label}</TableColumn>
-              )}
-            </TableHeader>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell key={column.key}>{column.label}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
             <TableBody>
-              {company.locals.map((local) => (
-                <TableRow key={local.id}>
-                  <TableCell>{local.name}</TableCell>
+              {employees.map((employee) => (
+                <TableRow key={employee.id}>
+                  <TableCell>{employee.name}</TableCell>
+                  <TableCell>{employee.lastname}</TableCell>
+                  <TableCell>{employee.email}</TableCell>
+                  <TableCell>{employee.local.name}</TableCell>
                   <TableCell>
-                    {local.address?.streetName} {local.address?.number}
-                  </TableCell>
-                  <TableCell>{local.phone}</TableCell>
-                  <TableCell>
-                    {local.employees.map((employee) => (
-                      <li key={employee.id}>
-                        {employee.name} {employee.lastname}
-                      </li>
-                    ))}
+                    <Button color="error" onClick={() => deleteEmployee(employee.id)}>
+                      <DeleteIcon />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

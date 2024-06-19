@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       Turn.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employee_id'})
       Turn.belongsTo(models.Client, { as: 'client', foreignKey: 'client_id'})
       Turn.belongsTo(models.Acomp, { as: 'acomp', foreignKey: 'acomp_id'})
+      Turn.belongsTo(models.Service, { as: "service", foreignKey: "service_id" });
     }
   }
   Turn.init(
@@ -23,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       day: {
         allowNull: false,
         type: DataTypes.DATE,
+        unique: true,
       },
       description: {
         type: DataTypes.STRING,
@@ -42,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
       },
       acomp_id: {
+        type: DataTypes.UUID,
+      },
+      service_id: {
         type: DataTypes.UUID,
       },
       createdAt: {

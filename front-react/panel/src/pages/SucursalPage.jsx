@@ -1,15 +1,12 @@
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
-  Input,
+  TextField,
+  Modal,
+  Typography,
+  Box,
   Card,
-  CardBody,
-  CardHeader,
-  ModalContent,
-} from "@nextui-org/react";
+  IconButton,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../contexts/Principal";
 import { useForm } from "react-hook-form";
@@ -25,6 +22,7 @@ export default function SucursalPage() {
     createAddress,
     fetchCompanyEmail,
     deleteLocal,
+    editLocal,
   } = useAppContext();
   
   const [showLocal, setShowLocal] = useState(false);
@@ -75,134 +73,198 @@ export default function SucursalPage() {
     setShowLocal(false);
   };
 
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <>
-      <Button onPress={openModalLocal} className="flex mx-auto">Agregar Sucursal</Button>
+      <Button onClick={openModalLocal} className="flex mx-auto">
+        Agregar Sucursal
+      </Button>
 
-      <Modal isOpen={showLocal} onClose={close}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Datos de la Sucursal
-          </ModalHeader>
-          <ModalBody>
-            <form
-              onSubmit={handleLocal(openModalAddress)}
-              className="flex flex-col gap-4"
-            >
-              <Input
-                size="sm"
-                defaultValue=""
-                {...registerLocal("name", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Nombre de la sucursal"
-              ></Input>
-              {errorsLocal.name && <span>{errorsLocal.name.message}</span>}
-              <Input
-                size="sm"
-                defaultValue=""
-                {...registerLocal("phone")}
-                label="Teléfono"
-              ></Input>
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="light"
-                  className="w-20"
-                  onPress={openModalAddress}
-                >
-                  Siguiente
-                </Button>
-              </div>
-            </form>
-          </ModalBody>
-        </ModalContent>
-        <ModalFooter></ModalFooter>
+      <Modal open={showLocal}>
+        <Card sx={style}>
+          <Box className="mb-6 flex justify-center">
+            <Typography sx={{ fontSize: 20 }}>Datos de la Sucursal</Typography>
+          </Box>
+          <form
+            onSubmit={handleLocal(openModalAddress)}
+            className="flex flex-col gap-4"
+          >
+            <TextField
+              label="Nombre de la sucursal"
+              size="small"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              helperText={errorsLocal.name?.message}
+              error={!!errorsLocal.name}
+              {...registerLocal("name", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            <TextField
+              label="Teléfono"
+              size="small"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              helperText={errorsLocal.phone?.message}
+              error={!!errorsLocal.phone}
+              {...registerLocal("phone")}
+            ></TextField>
+            <div className="flex justify-between mt-4">
+              <Button
+                type="submit"
+                color="secondary"
+                variant="light"
+                className="w-20"
+                onClick={close}
+              >
+                Cerrar
+              </Button>
+              <Button
+                type="submit"
+                color="secondary"
+                variant="light"
+                className="w-20"
+                onClick={openModalAddress}
+              >
+                Siguiente
+              </Button>
+            </div>
+          </form>
+        </Card>
       </Modal>
 
-      <Modal isOpen={showAddress} onClose={close}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Dirección</ModalHeader>
-          <ModalBody>
-            <form
-              onSubmit={handleAddress(closeModalAddress)}
-              className="flex flex-col gap-4"
-            >
-              <Input
-                defaultValue=""
-                {...registerAddress("streetName", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Calle"
-              ></Input>
-              {errorsAddress.streetName && (
-                <span>{errorsAddress.streetName.message}</span>
-              )}
-              <Input
-                defaultValue=""
-                {...registerAddress("number", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Numero"
-              ></Input>
-              {errorsAddress.number && (
-                <span>{errorsAddress.number.message}</span>
-              )}
-              <Input
-                defaultValue=""
-                {...registerAddress("city", {
-                  required: {
-                    value: true,
-                    message: "El campo es requerido",
-                  },
-                })}
-                label="Ciudad"
-              ></Input>
-              {errorsAddress.city && (
-                <span>{errorsAddress.city.message}</span>
-              )}
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="light"
-                  className="w-20"
-                >
-                  Guardar
-                </Button>
-              </div>
-            </form>
-          </ModalBody>
-        </ModalContent>
+      <Modal open={showAddress}>
+        <Card sx={style}>
+          <Box className="mb-6 flex justify-center">
+            <Typography sx={{ fontSize: 20 }}>Dirección</Typography>
+          </Box>
+          <form
+            onSubmit={handleAddress(closeModalAddress)}
+            className="flex flex-col gap-4"
+          >
+            <TextField
+              label="Calle"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              helperText={errorsAddress.streetName?.message}
+              error={!!errorsAddress.streetName}
+              {...registerAddress("streetName", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            <TextField
+              label="Numero"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              helperText={errorsAddress.number?.message}
+              error={!!errorsAddress.number}
+              {...registerAddress("number", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            <TextField
+              label="Ciudad"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              helperText={errorsAddress.city?.message}
+              error={!!errorsAddress.city}
+              {...registerAddress("city", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+              })}
+            ></TextField>
+            <div className="flex justify-between mt-4">
+              <Button
+                color="secondary"
+                variant="light"
+                className="w-20"
+                onClick={close}
+              >
+                Cerrar
+              </Button>
+              <Button
+                type="submit"
+                color="secondary"
+                variant="light"
+                className="w-20"
+              >
+                Guardar
+              </Button>
+            </div>
+          </form>
+        </Card>
       </Modal>
 
       <div className="mt-10 flex justify-center flex-wrap">
         {company &&
           company.locals.map((local) => {
             return (
-              <Card key={local.id} className="w-72 flex m-2">
-                <CardHeader className="flex justify-between">
-                  <h1>{local.name.toUpperCase()}</h1>
-                  <Button isIconOnly color="danger" size="sm" variant="light" onClick={() => deleteLocal(local.id)}>
-                    <DeleteIcon />
-                  </Button>
-                  <Button isIconOnly color="danger" size="sm" variant="light" onClick={() => deleteLocal(local.id)}>
-                    <EditIcon />
-                  </Button>
-                </CardHeader>
-                <CardBody>
-                  Dirección: {local.address?.streetName} {local?.address?.number}
-                </CardBody>
+              <Card
+                key={local.id}
+                className="w-72 flex m-2 p-6 flex-col gap-10"
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <Typography>
+                      Sucursal: <b>{local.name.toUpperCase()}</b>
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      variant="light"
+                      onClick={() => editLocal(local.id)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      size="small"
+                      variant="light"
+                      onClick={() => deleteLocal(local.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+                <Box>
+                  <Typography>
+                    Dirección: {local.address?.streetName}{" "}
+                    {local?.address?.number}
+                  </Typography>
+                </Box>
               </Card>
             );
           })}

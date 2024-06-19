@@ -10,6 +10,7 @@ import HeaderComp from "./components/HeaderComp";
 import RegisterPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
+import ServicesPage from "./pages/ServicesPage.jsx";
 import { useAppContext } from "./contexts/Principal.jsx";
 import "./assets/css/App.css";
 
@@ -46,19 +47,9 @@ function App() {
               >
                 <Route path="/sucursales" element={<SucursalPage />} />
                 <Route path="/perfil" element={<ProfilePage />} />
+                <Route path="/employee" element={<EmployeePage /> } />
+                <Route path="/services" element={<ServicesPage /> } />
               </Route>
-              <Route
-                path="/employee"
-                element={
-                  user ? (
-                    <ProtectedRoute isAuthenticate={user} redirectTo>
-                      <EmployeePage />
-                    </ProtectedRoute>
-                  ) : (
-                    <PageNotFound />
-                  )
-                }
-              />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </div>

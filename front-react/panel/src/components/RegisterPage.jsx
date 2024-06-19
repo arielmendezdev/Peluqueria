@@ -15,6 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import PersonIcon from "@mui/icons-material/Person";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { useAppContext } from "../contexts/Principal";
 
 export default function RegisterPage() {
@@ -48,7 +49,7 @@ export default function RegisterPage() {
 
   return (
     <div className="login flex flex-col justify-center sm:w-96 mx-auto">
-      <Card className="shadow-black shadow-lg bg-transparent border p-6 backdrop-blur-sm">
+      <Card className="shadow-black shadow-lg bg-transparent border p-6 backdrop-blur-sm mx-6">
         <CardHeader className="text-lg flex justify-center">
           <h1 className="text-amber-600">
             <b>REGISTRO</b>
@@ -60,6 +61,7 @@ export default function RegisterPage() {
               <Input
                 placeholder="Nombre de la empresa"
                 labelPlacement="outside"
+                autoFocus
                 {...register("social_razon", { required: true })}
                 size="sm"
                 variant="bordered"
@@ -107,7 +109,7 @@ export default function RegisterPage() {
                 size="sm"
                 variant="bordered"
                 defaultValue=""
-                startContent={<PersonIcon />}
+                startContent={<LocalPhoneIcon />}
                 className="text-white"
               />
               {errors.lastname && <span>{errors.lastname.message}</span>}
@@ -116,7 +118,6 @@ export default function RegisterPage() {
                 labelPlacement="outside"
                 type="email"
                 className="text-white"
-                autoFocus
                 {...register("email", {
                   required: {
                     value: true,

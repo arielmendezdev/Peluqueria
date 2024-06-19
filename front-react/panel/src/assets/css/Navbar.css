@@ -1,5 +1,3 @@
-.active {
-    font: bold;
-    color: aqua;
-    cursor: default;
+.menu-link {
+    display: block;
 }

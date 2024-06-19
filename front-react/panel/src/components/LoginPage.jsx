@@ -35,7 +35,7 @@ export default function LoginPage() {
   })
 
   return (
-    <div className="login flex flex-col justify-center">
+    <div className="login flex flex-col justify-center mx-6">
       <div className="flex justify-center sm:mb-28">
         <Image src={logo} width={250} />
       </div>

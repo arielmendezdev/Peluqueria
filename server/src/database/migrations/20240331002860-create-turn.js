@@ -13,6 +13,7 @@ module.exports = {
       day: {
         allowNull: false,
         type: Sequelize.DATE,
+        unique: true,
       },
       description: {
         type: Sequelize.STRING,
@@ -47,6 +48,13 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: "Acomps",
+          key: "id",
+        },
+      },
+      service_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "Services",
           key: "id",
         },
       },
