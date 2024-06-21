@@ -5,6 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Service extends Model {
     static associate(models) {
+      Service.belongsTo(models.Company, { as: "company", foreignKey: "company_id" });
+
       Service.hasOne(models.Turn, { as: "turn", foreignKey: "id" });
     }
   }
@@ -21,9 +23,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
+      image: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      company_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -1,7 +1,9 @@
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 import { useContext, useState } from "react";
 import axios from "axios";
-import appFirebase from "../creadentials";
+import appFirebase from "../structures/creadentials";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 import {
   getAuth,
   signOut,
@@ -9,6 +11,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+
+export const storage = getStorage(appFirebase);
 
 const AppContext = createContext();
 
@@ -19,18 +23,21 @@ export function useAppContext() {
 const url = "http://127.0.0.1:3000/api";
 
 export default function StatePrincipalContext({ children }) {
+
+  localStorage.getItem('company')
+
   const [company, setCompany] = useState();
-  const [locals, setLocals] = useState([]);
+  const [emailCompany, setEmailCompany] = useState();
   const [idCompany, setIdCompany] = useState();
   const [background, setBackground] = useState(false)
   const [user, setUser] = useState(null);
-  const [employees, setEmployees] = useState()
-  const [emailCompany, setEmailCompany] = useState(localStorage.setItem("user", JSON.stringify(user)));
   const auth = getAuth(appFirebase);
+  
+  //  COMPAÑIA
 
-  const fetchCompanyEmail = async (email) => {
+  const fetchCompanyEmail = async () => {
     try {
-        const response = await axios.get(`${url}/company/email/${email}`);
+        const response = await axios.get(`${url}/company/email/${emailCompany}`);
         setIdCompany(response.data.id)
         await fetchCompanyById(response.data.id)
     } catch (error) {
@@ -42,7 +49,7 @@ export default function StatePrincipalContext({ children }) {
     try {
         const response = await axios.get(`${url}/company/${companyId}`);
         setCompany(response.data)
-        
+        localStorage.setItem("company", JSON.stringify(response.data));
     } catch (error) {
         console.log("No company found");
     }
@@ -58,24 +65,9 @@ export default function StatePrincipalContext({ children }) {
     }
   };
 
-  const fetchLocalsByCompany = async () => {
-    try {
-      const response = await axios.get(`${url}/local`);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const createLocal = async (data) => {
-    try {
-      const response = await axios.post(`${url}/local/`, data);
-      return response.data
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
+  
+  //  DIRECCIONES
+  
   const createAddress = async (data) => {
     try {
       const response = await axios.post(`${url}/address`, data);
@@ -85,9 +77,22 @@ export default function StatePrincipalContext({ children }) {
       console.log(error)
     }
   }
-
+  
+  // LOCALES
+  
+  const createLocal = async (data) => {
+    try {
+      const response = await axios.post(`${url}/local/`, data);
+      fetchCompanyEmail();
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   const editLocal = async (localId) => {
     try {
+      fetchCompanyEmail();
       console.log(localId)
     } catch (error) {
       console.log(error)
@@ -97,43 +102,78 @@ export default function StatePrincipalContext({ children }) {
   const deleteLocal = async (localId) => {
     try {
       await axios.delete(`${url}/local/${localId}`);
+      fetchCompanyEmail();
     } catch (error) {
       console.log(error);
     }
     fetchCompanyById(idCompany);
   };
 
-  const fetchEmployees = async () => {
-    try {
-        const response = await axios.get(`${url}/employee`)
-        setEmployees(response.data)
-    } catch (error) {
-        console.log(error)
-    }
-  }
-  
+  // EMPLEADOS
+
   const createEmployee = async (newEmployee) => {
     try {
       await axios.post(`${url}/employee`, newEmployee);
-      fetchEmployees();
+      fetchCompanyEmail();
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const deleteEmployee = async (newEmployee) => {
+    try {
+      await axios.delete(`${url}/employee/${newEmployee}`);
+      fetchCompanyEmail();
     } catch (error) {
       console.log(error)
     }
   }
 
-  const deleteEmployee = async (newEmployee) => {
+  // SERVICIOS
+
+  const [services, setServices] = useState()
+
+  const fetchServices = async () => {
     try {
-      await axios.delete(`${url}/employee/${newEmployee}`);
-      fetchEmployees()
+      const response = await axios.get(`${url}/service`)
+      setServices(response.data)
     } catch (error) {
       console.log(error)
     }
   }
+
+  const saveService = async (service) => {
+    try {
+      await axios.post(`${url}/service`, service)
+      fetchServices()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const editService = async (serviceId, service) => {
+    try {
+      await axios.put(`${url}/service/${serviceId}`, service)
+      fetchServices()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // CARGA DE IMAGENES
+
+  const uploadFile = async (file) => {
+    const storageRef = ref(storage, v4());
+    const response = await uploadBytes(storageRef, file)
+    return response
+  };
+
+  // LOGIN
 
   onAuthStateChanged(auth, (userFirebase) => {
     if (userFirebase) {
       setUser(userFirebase)
-      setEmailCompany(userFirebase.email)
+      setEmailCompany(userFirebase.email);
     } else {
       setUser(null);
     }
@@ -142,15 +182,18 @@ export default function StatePrincipalContext({ children }) {
   const logout = async () => {
     await signOut(auth)
     setBackground(false)
-    setEmailCompany(localStorage.removeItem("user"));
+    localStorage.removeItem("company")
   }
+
+  useEffect(() => {
+    fetchServices();
+  }, [])
 
   return (
     <>
       <AppContext.Provider
         value={{
           company,
-          deleteLocal,
           user,
           signInWithEmailAndPassword,
           createUserWithEmailAndPassword,
@@ -161,14 +204,16 @@ export default function StatePrincipalContext({ children }) {
           setBackground,
           createCompany,
           createLocal,
+          deleteLocal,
           createAddress,
-          emailCompany,
           createEmployee,
-          fetchLocalsByCompany,
-          fetchEmployees,
-          employees,
           deleteEmployee,
           editLocal,
+          fetchServices,
+          services,
+          saveService,
+          uploadFile,
+          editService,
         }}
       >
         {children}

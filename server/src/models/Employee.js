@@ -5,6 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Employee extends Model {
     static associate(models) {
+      Employee.belongsTo(models.Company, {as: 'company', foreignKey: 'company_id'});
       Employee.belongsTo(models.Local, {as: 'local', foreignKey: 'local_id'});
       
       Employee.hasMany(models.Turn, {as: 'turns', foreignKey: 'employee_id'});
@@ -46,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
       local_id: {
         allowNull: false,
         type: DataTypes.UUID,
+      },
+      company_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

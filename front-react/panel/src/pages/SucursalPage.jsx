@@ -15,7 +15,6 @@ import EditIcon from "@mui/icons-material/Edit";
 
 export default function SucursalPage() {
   const {
-    emailCompany,
     company,
     setBackground,
     createLocal,
@@ -65,7 +64,7 @@ export default function SucursalPage() {
   
   useEffect(() => {
     setBackground(true);
-    fetchCompanyEmail(emailCompany)
+    fetchCompanyEmail();
   }, []);
 
   const close = () => {
@@ -103,6 +102,7 @@ export default function SucursalPage() {
               size="small"
               defaultValue=""
               fullWidth
+              autoFocus
               variant="outlined"
               helperText={errorsLocal.name?.message}
               error={!!errorsLocal.name}
@@ -125,7 +125,6 @@ export default function SucursalPage() {
             ></TextField>
             <div className="flex justify-between mt-4">
               <Button
-                type="submit"
                 color="secondary"
                 variant="light"
                 className="w-20"
@@ -160,6 +159,7 @@ export default function SucursalPage() {
               label="Calle"
               defaultValue=""
               fullWidth
+              autoFocus
               variant="outlined"
               helperText={errorsAddress.streetName?.message}
               error={!!errorsAddress.streetName}
@@ -222,7 +222,7 @@ export default function SucursalPage() {
 
       <div className="mt-10 flex justify-center flex-wrap">
         {company &&
-          company.locals.map((local) => {
+          company.locals?.map((local) => {
             return (
               <Card
                 key={local.id}

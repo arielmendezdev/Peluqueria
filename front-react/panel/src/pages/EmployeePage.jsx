@@ -21,12 +21,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export default function EmployeePage() {
   const {
     company,
-    emailCompany,
-    fetchCompanyEmail,
     createEmployee,
-    fetchEmployees,
-    employees,
     deleteEmployee,
+    fetchCompanyEmail,
   } = useAppContext();
 
   const columns = [
@@ -60,11 +57,7 @@ export default function EmployeePage() {
   } = useForm();
 
   useEffect(() => {
-    const getInfo = async () => {
-      await fetchCompanyEmail(emailCompany);
-      await fetchEmployees();
-    };
-    getInfo();
+    fetchCompanyEmail();
   }, []);
 
   const close = () => {
@@ -76,6 +69,7 @@ export default function EmployeePage() {
   };
 
   const saveEmployee = handleSubmit(async (data) => {
+    data.company_id = company.id;
     await createEmployee(data);
     close();
   });
@@ -185,7 +179,7 @@ export default function EmployeePage() {
         </Card>
       </Modal>
 
-      {employees && (
+      {company && (
         <div>
           <Table>
             <TableHead>
@@ -196,7 +190,7 @@ export default function EmployeePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employees.map((employee) => (
+              {company.employees?.map((employee) => (
                 <TableRow key={employee.id}>
                   <TableCell>{employee.name}</TableCell>
                   <TableCell>{employee.lastname}</TableCell>

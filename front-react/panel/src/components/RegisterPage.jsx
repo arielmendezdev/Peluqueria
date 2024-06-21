@@ -38,7 +38,7 @@ export default function RegisterPage() {
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
       await createCompany(data)
-      navigate('/sucursales')
+      navigate('/login')
       reset();
     } catch (error) {
       if (error.message == "Firebase: Error (auth/email-already-in-use).") {

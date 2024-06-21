@@ -20,13 +20,15 @@
     "@nextui-org/system": "^2.0.15",
     "@nextui-org/theme": "^2.1.18",
     "axios": "^1.6.8",
-    "firebase": "^10.11.0",
+    "firebase": "^10.12.2",
     "framer-motion": "^11.0.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
     "react-router-dom": "^6.22.3",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "swiper": "^11.1.4",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

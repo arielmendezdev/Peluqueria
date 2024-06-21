@@ -14,8 +14,22 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
+      image: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
       isActive: {
         type: Sequelize.BOOLEAN,
+      },
+      company_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Companies",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,

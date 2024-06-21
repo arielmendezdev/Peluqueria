@@ -1,5 +1,5 @@
 const BaseController = require("./base.controller");
-const { Address, Employee, Turn } = require("../models");
+const { Address, Employee, Turn, Service } = require("../models");
 
 class LocalController extends BaseController {
   constructor({ db }) {
@@ -14,6 +14,7 @@ class LocalController extends BaseController {
           { model: Address, as: "address" },
           { model: Employee, as: "employees" },
           { model: Turn, as: "turns" },
+          { model: Service, as: "services" },
         ],
       });
       res.send(response)
@@ -21,14 +22,15 @@ class LocalController extends BaseController {
       res.send(error)
     }
   }
-
+  
   async getAll(req, res) {
     try {
       const response = await this.db[this.entity].findAll({
         include: [
-            { model: Address, as: "address"},
-            { model: Employee, as: "employees"},
-            { model: Turn, as: "turns"}
+          { model: Address, as: "address"},
+          { model: Employee, as: "employees"},
+          { model: Turn, as: "turns"},
+          { model: Service, as: "services" },
         ]
       });
       res.send(response);
