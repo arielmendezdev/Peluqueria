@@ -14,6 +14,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 export default function SucursalPage() {
+  
+  const {
+    register: registerLocal,
+    handleSubmit: handleLocal,
+    formState: { errors: errorsLocal },
+    reset: resetLocal,
+    getValues: getValuesLocal
+  } = useForm();
+  const {
+    register: registerAddress,
+    handleSubmit: handleAddress,
+    formState: { errors: errorsAddress },
+    reset: resetAddress,
+    getValues: getValuesAddress
+  } = useForm();
+
   const {
     company,
     setBackground,
@@ -22,45 +38,60 @@ export default function SucursalPage() {
     fetchCompanyEmail,
     deleteLocal,
     editLocal,
+    editAddress,
   } = useAppContext();
   
   const [showLocal, setShowLocal] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const [idLocal, setIdLocal] = useState()
+  const [modalEdit, setModalEdit] = useState(false)
 
-  const openModalLocal = () => setShowLocal(true);
+  const openModalLocal = () => {
+    resetLocal({
+      getValuesLocal
+    })
+    resetAddress({
+      getValuesAddress
+    });
+    setShowLocal(true)
+    setModalEdit(false)
+  };
   const closeModalLocal = () => setShowLocal(false);
   const openModalAddress = async (data) => {
     if (data.name != null) {
-      data.company_id = company.id
-      const response = await createLocal(data)
-      setIdLocal(response.id)
-      closeModalLocal();
-      setShowAddress(true);
+      if (modalEdit) {
+        const info = {
+          name: data.name,
+          phone: data.phone
+        }
+        await editLocal(data.id, info)
+      } else {
+        data.company_id = company.id;
+        const response = await createLocal(data)
+        setIdLocal(response.id)
+      }
     }
+    closeModalLocal();
+    setShowAddress(true);
   };
   const closeModalAddress = async (data) => {
     if (data.streetName != null || data.number != null || data.city != null ) {
-      data.local_id = idLocal
-      await createAddress(data)
-      setShowAddress(false);
-      resetLocal();
-      resetAddress();
+      if (modalEdit) {
+        const info = {
+          streetName: data.streetName,
+          number: data.number,
+          city: data.city
+        }
+        await editAddress(data.id, info)
+        setShowAddress(false);
+      } else {
+        data.local_id = idLocal
+        await createAddress(data)
+        setShowAddress(false);
+      }
     }
+    close()
   };
-
-  const {
-    register: registerLocal,
-    handleSubmit: handleLocal,
-    formState: { errors: errorsLocal },
-    reset: resetLocal,
-  } = useForm();
-  const {
-    register: registerAddress,
-    handleSubmit: handleAddress,
-    formState: { errors: errorsAddress },
-    reset: resetAddress,
-  } = useForm();
   
   useEffect(() => {
     setBackground(true);
@@ -68,9 +99,22 @@ export default function SucursalPage() {
   }, []);
 
   const close = () => {
+    resetLocal({
+      getValuesLocal,
+    });
+    resetAddress({
+      getValuesAddress,
+    });
     setShowAddress(false);
     setShowLocal(false);
   };
+
+  const handleEditLocal = (data) => {
+    setModalEdit(true)
+    setShowLocal(true);
+    resetLocal(data)
+    resetAddress(data.address)
+  }
 
   const style = {
     position: "absolute",
@@ -91,7 +135,9 @@ export default function SucursalPage() {
       <Modal open={showLocal}>
         <Card sx={style}>
           <Box className="mb-6 flex justify-center">
-            <Typography sx={{ fontSize: 20 }}>Datos de la Sucursal</Typography>
+            <Typography sx={{ fontSize: 20 }}>
+              {modalEdit ? "Editar" : "Agregar"}
+            </Typography>
           </Box>
           <form
             onSubmit={handleLocal(openModalAddress)}
@@ -137,7 +183,6 @@ export default function SucursalPage() {
                 color="secondary"
                 variant="light"
                 className="w-20"
-                onClick={openModalAddress}
               >
                 Siguiente
               </Button>
@@ -200,6 +245,7 @@ export default function SucursalPage() {
             ></TextField>
             <div className="flex justify-between mt-4">
               <Button
+                disabled={showAddress}
                 color="secondary"
                 variant="light"
                 className="w-20"
@@ -240,12 +286,12 @@ export default function SucursalPage() {
                       Sucursal: <b>{local.name.toUpperCase()}</b>
                     </Typography>
                   </Box>
-                  <Box>
+                  <Box className="flex">
                     <IconButton
                       color="primary"
                       size="small"
                       variant="light"
-                      onClick={() => editLocal(local.id)}
+                      onClick={() => handleEditLocal(local)}
                     >
                       <EditIcon />
                     </IconButton>

@@ -77,6 +77,15 @@ export default function StatePrincipalContext({ children }) {
       console.log(error)
     }
   }
+
+  const editAddress = async (addressId, data) => {
+    try {
+      await axios.put(`${url}/address/${addressId}`, data);
+      fetchCompanyEmail();
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
   // LOCALES
   
@@ -90,10 +99,9 @@ export default function StatePrincipalContext({ children }) {
     }
   }
   
-  const editLocal = async (localId) => {
+  const editLocal = async (localId, data) => {
     try {
-      fetchCompanyEmail();
-      console.log(localId)
+      await axios.put(`${url}/local/${localId}`, data);
     } catch (error) {
       console.log(error)
     }
@@ -130,17 +138,6 @@ export default function StatePrincipalContext({ children }) {
   }
 
   // SERVICIOS
-
-  const [services, setServices] = useState()
-
-  const fetchServices = async () => {
-    try {
-      const response = await axios.get(`${url}/service`)
-      setServices(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const saveService = async (service) => {
     try {
@@ -185,10 +182,6 @@ export default function StatePrincipalContext({ children }) {
     localStorage.removeItem("company")
   }
 
-  useEffect(() => {
-    fetchServices();
-  }, [])
-
   return (
     <>
       <AppContext.Provider
@@ -204,13 +197,12 @@ export default function StatePrincipalContext({ children }) {
           setBackground,
           createCompany,
           createLocal,
+          editLocal,
           deleteLocal,
           createAddress,
+          editAddress,
           createEmployee,
           deleteEmployee,
-          editLocal,
-          fetchServices,
-          services,
           saveService,
           uploadFile,
           editService,

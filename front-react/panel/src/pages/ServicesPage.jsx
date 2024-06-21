@@ -3,18 +3,14 @@ import {
   Modal,
   Box,
   Card,
-  InputAdornment,
   IconButton,
   Typography,
   TextField,
 } from "@mui/material";
-import Link from "../components/specials/Link";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../contexts/Principal";
 import EditIcon from "@mui/icons-material/Edit";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -36,6 +32,7 @@ export default function Services() {
   } = useForm();
 
   const handleModal = () => {
+    setModalEdit(false)
     setModal(true);
   };
 
@@ -67,12 +64,15 @@ export default function Services() {
 
   const style = {
     position: "absolute",
+    display: "flex",
+    flexDirection: "column",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
     boxShadow: 24,
     p: 4,
+    gap: 4
   };
 
   const handleEdit = async (service) => {
@@ -114,6 +114,7 @@ export default function Services() {
         {company &&
           company.services.map((service) => (
             <Card
+              key={service.id}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -140,6 +141,7 @@ export default function Services() {
                 <img src={service.image} alt="" width="100%"/>
               </Box>
               <Typography
+                variant="h6"
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -186,8 +188,10 @@ export default function Services() {
             {...register("image", {})}
             onChange={handleChange}
             ></TextField>
-          <Button onClick={closeModal}>Close</Button>
-          <Button type="submit">Guardar</Button>
+          <Box className="flex justify-evenly">
+            <Button onClick={closeModal}>Close</Button>
+            <Button type="submit">Guardar</Button>
+          </Box>
         </Card>
       </Modal>
     </div>

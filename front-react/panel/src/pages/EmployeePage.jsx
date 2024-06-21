@@ -197,7 +197,10 @@ export default function EmployeePage() {
                   <TableCell>{employee.email}</TableCell>
                   <TableCell>{employee.local.name}</TableCell>
                   <TableCell>
-                    <Button color="error" onClick={() => deleteEmployee(employee.id)}>
+                    <Button
+                      color="error"
+                      onClick={() => deleteEmployee(employee.id)}
+                    >
                       <DeleteIcon />
                     </Button>
                   </TableCell>
