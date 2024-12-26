@@ -138,7 +138,7 @@ export default function StatePrincipalContext({ children }) {
   }
 
   // SERVICIOS
-
+  
   const saveService = async (service) => {
     try {
       await axios.post(`${url}/service`, service)
@@ -152,6 +152,15 @@ export default function StatePrincipalContext({ children }) {
     try {
       await axios.put(`${url}/service/${serviceId}`, service)
       fetchServices()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const deleteService = async (serviceId) => {
+    try {
+      await axios.delete(`${url}/service/${serviceId}`)
+      fetchCompanyEmail();
     } catch (error) {
       console.log(error)
     }
@@ -206,6 +215,7 @@ export default function StatePrincipalContext({ children }) {
           saveService,
           uploadFile,
           editService,
+          deleteService,
         }}
       >
         {children}

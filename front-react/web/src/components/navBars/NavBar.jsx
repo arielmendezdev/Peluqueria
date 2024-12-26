@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useAppContext } from "../../context/General";
+import Home from "@mui/icons-material/Home";
 
 export default function NavBar({ listDrawer }) {
   const { logout } = useAppContext();
@@ -26,7 +27,7 @@ export default function NavBar({ listDrawer }) {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{background: "#202020"}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -37,7 +38,7 @@ export default function NavBar({ listDrawer }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Hola {client.name}
+            <Link to="/">Hola {client.name}</Link>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "flex" } }}>
             {listDrawer.map((item) => (

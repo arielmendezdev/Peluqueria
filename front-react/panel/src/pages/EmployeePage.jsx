@@ -36,10 +36,6 @@ export default function EmployeePage() {
       label: "Apellido",
     },
     {
-      key: "email",
-      label: "Email",
-    },
-    {
       key: "local",
       label: "Local",
     },
@@ -194,7 +190,6 @@ export default function EmployeePage() {
                 <TableRow key={employee.id}>
                   <TableCell>{employee.name}</TableCell>
                   <TableCell>{employee.lastname}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
                   <TableCell>{employee.local.name}</TableCell>
                   <TableCell>
                     <Button

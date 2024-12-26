@@ -1,5 +1,5 @@
 export default function Turnos() {
   return (
-    <div>Turnos</div>
+    <div className="mt-28">Turnos</div>
   )
 }

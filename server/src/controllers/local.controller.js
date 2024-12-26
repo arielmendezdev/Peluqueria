@@ -10,12 +10,12 @@ class LocalController extends BaseController {
     const { id } = req.params
     try {
       const response = await this.db[this.entity].findByPk(id, {
-        include: [
-          { model: Address, as: "address" },
-          { model: Employee, as: "employees" },
-          { model: Turn, as: "turns" },
-          { model: Service, as: "services" },
-        ],
+        // include: [
+        //   { model: Address, as: "address" },
+        //   { model: Employee, as: "employees" },
+        //   { model: Turn, as: "turns" },
+        //   { model: Service, as: "services" },
+        // ],
       });
       res.send(response)
     } catch (error) {
@@ -28,9 +28,9 @@ class LocalController extends BaseController {
       const response = await this.db[this.entity].findAll({
         include: [
           { model: Address, as: "address"},
-          { model: Employee, as: "employees"},
-          { model: Turn, as: "turns"},
-          { model: Service, as: "services" },
+        //   { model: Employee, as: "employees"},
+        //   { model: Turn, as: "turns"},
+        //   { model: Service, as: "services" },
         ]
       });
       res.send(response);

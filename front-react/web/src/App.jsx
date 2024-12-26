@@ -1,41 +1,39 @@
 import { Container } from "@mui/material";
 import NavBar from "./components/navBars/NavBar";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Sucursales from "./pages/Sucursales";
+import NuevoTurno from "./pages/NuevoTurno";
 import Turnos from "./pages/Turnos";
-import Contacto from "./pages/Contacto";
+import Historial from "./pages/Historial";
 import HomeIcon from "@mui/icons-material/Home";
-import ApartmentIcon from "@mui/icons-material/Apartment";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import Login from "./components/login/Login";
 import Register from "./components/login/Register";
 import { useAppContext } from "./context/General";
-import { useEffect } from "react";
 import PageNotFound from "./components/PageNotFound";
 import ProtectedRoute from "../../panel/src/components/ProtectedRoute";
-import img from "./assets/images/fondo22.jpg";
+import Sucursal from "./pages/Sucursal";
+import Empleado from "./pages/Empleado";
 
 const listDrawer = [
   {
-    title: "Home",
-    path: "/home",
-    icon: <HomeIcon />,
+    title: "Nuevo Turno",
+    path: "/turnos/sucursal",
+    icon: <AccessAlarmIcon />,
   },
-  {
-    title: "Sucursales",
-    path: "/sucursales",
-    icon: <ApartmentIcon />,
-  },
+  // {
+  //   title: "Empleado",
+  //   path: "/turnos/empleado",
+  //   icon: <AccessAlarmIcon />,
+  // },
   {
     title: "Turnos",
     path: "/turnos",
     icon: <AccessAlarmIcon />,
   },
   {
-    title: "Contacto",
-    path: "/contacto",
+    title: "Historial",
+    path: "/historial",
     icon: <ContactMailIcon />,
   },
 ];
@@ -46,24 +44,28 @@ function App() {
   return (
     <>
       {user && <NavBar listDrawer={listDrawer} />}
-      <Container sx={{ mt: 10 }}>
+      <div>
         <Routes>
-          <Route index path="/" element={user ? <Home /> : <Login />} />
+          <Route index path="/" element={user ? <NuevoTurno /> : <Login />} />
           {/* <Route path="/login" element={user ? <Home /> : <Login />} /> */}
-          <Route path="/register" element={user ? <Home /> : <Register />} />
+          <Route
+            path="/register"
+            element={user ? <NuevoTurno /> : <Register />}
+          />
           <Route
             element={
               user ? <ProtectedRoute isAuthenticate={user} /> : <PageNotFound />
             }
           >
-            <Route path="/home" element={<Home />} />
-            <Route path="/sucursales" element={<Sucursales />} />
+            <Route path="/home" element={<NuevoTurno />} />
             <Route path="/turnos" element={<Turnos />} />
-            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/turnos/sucursal" element={<Sucursal />} />
+            <Route path="/turnos/empleado" element={<Empleado />} />
+            <Route path="/historial" element={<Historial />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </Container>
+      </div>
     </>
   );
 }

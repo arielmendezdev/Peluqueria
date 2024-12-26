@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 import { useContext, useState } from "react";
 import appFirebase from "../structures/creadentials";
 import {
@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import axios from 'axios'
+import Empleado from "../pages/Empleado";
 
 const AppContext = createContext();
 
@@ -22,17 +23,43 @@ export default function StateGeneralContext({ children }) {
   
   const [background, setBackground] = useState(false);
   const [user, setUser] = useState();
+  const [employees, setEmployees] = useState();
+  const [sucursals, setSucursals] = useState();
+  const [sucursalSelected, setSucursalSelected] = useState();
   const [client, setClient] = useState(
     localStorage.setItem("user", JSON.stringify(user))
   );
   const auth = getAuth(appFirebase);
-  
+
+  // CLIENTES
   
   const createClient = async (dataClient) => {
     try {
       await axios.post(`${url}/client/`, dataClient);
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  // EMPLEADOS
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get(`${url}/employee`)
+      
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  // SUCURSALES
+
+  const fetchSucursals = async () => {
+    try {
+      const response = await axios.get(`${url}/local`)
+      setSucursals(response.data)
+    } catch (error) {
+        console.log(error)
     }
   }
 
@@ -66,6 +93,13 @@ export default function StateGeneralContext({ children }) {
           user,
           client,
           createClient,
+          sucursals,
+          fetchSucursals,
+          sucursalSelected,
+          setSucursalSelected,
+          employees,
+          fetchEmployees,
+          setEmployees
         }}
       >
         {children}

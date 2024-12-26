@@ -11,12 +11,19 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../contexts/Principal";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "swiper/css";
 import "swiper/css/navigation";
 
 export default function Services() {
-  const { company, saveService, uploadFile, editService, fetchCompanyEmail } =
-    useAppContext();
+  const {
+    company,
+    saveService,
+    uploadFile,
+    editService,
+    fetchCompanyEmail,
+    deleteService,
+  } = useAppContext();
   
   const [modal, setModal] = useState(false);
   const [modalEdit, setModalEdit] = useState(false)
@@ -61,7 +68,7 @@ export default function Services() {
     setFile(false);
     closeModal();
   });
-
+  
   const style = {
     position: "absolute",
     display: "flex",
@@ -74,6 +81,11 @@ export default function Services() {
     p: 4,
     gap: 4
   };
+  
+  const handleDelete = () => {
+    deleteService(serviceSelected);
+    closeModal();
+  }
 
   const handleEdit = async (service) => {
     setModal(true);
@@ -104,12 +116,13 @@ export default function Services() {
         Agregar Servicio
       </Button>
 
-      <Box sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: 4,
-      }}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: 4,
+        }}
       >
         {company &&
           company.services.map((service) => (
@@ -125,20 +138,22 @@ export default function Services() {
                 boxShadow: 10,
                 position: "relative",
               }}
-              >
+            >
               <IconButton
                 sx={{
                   position: "absolute",
                   top: 0,
                 }}
                 onClick={() => handleEdit(service)}
-                >
+              >
                 <EditIcon />
               </IconButton>
-              <Box sx={{
-                height: 250,
-              }}>
-                <img src={service.image} alt="" width="100%"/>
+              <Box
+                sx={{
+                  height: 250,
+                }}
+              >
+                <img src={service.image} alt="" width="100%" />
               </Box>
               <Typography
                 variant="h6"
@@ -147,7 +162,7 @@ export default function Services() {
                   justifyContent: "center",
                   alignItems: "center",
                   mt: 4,
-                  mb: 4 
+                  mb: 4,
                 }}
               >
                 {service.type}
@@ -162,6 +177,17 @@ export default function Services() {
         aria-describedby="modal-modal-description"
       >
         <Card sx={style} component="form" onSubmit={save}>
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: 0,
+              marginLeft: "75%",
+              color: "red"
+            }}
+            onClick={() => handleDelete()}
+          >
+            <DeleteIcon />
+          </IconButton>
           <Typography sx={{ mb: 2 }} variant="h6">
             {modalEdit ? "Editar Servicio" : "Nuevo Servicio"}
           </Typography>
@@ -180,14 +206,14 @@ export default function Services() {
                 message: "El nombre del servicio es muy corto",
               },
             })}
-            ></TextField>
+          ></TextField>
           <TextField
             type="file"
             fullWidth
             variant="outlined"
             {...register("image", {})}
             onChange={handleChange}
-            ></TextField>
+          ></TextField>
           <Box className="flex justify-evenly">
             <Button onClick={closeModal}>Close</Button>
             <Button type="submit">Guardar</Button>
